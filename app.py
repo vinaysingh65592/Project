@@ -426,6 +426,15 @@ def voice_assistant_interface(engine):
                     all_symptoms = engine.get_all_symptoms()
                     symptom_set = set(all_symptoms)
                     model = genai.GenerativeModel("gemini-2.5-flash-lite")
+                    
+                    # Relax safety filters for medical content parsing
+                    safety_settings = [
+                        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+                        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+                        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+                        {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+                    ]
+                    
                     prompt = f"""
                     You are a highly capable medical parsing AI. 
                     The patient reported the following physical issues: "{text}"
@@ -436,14 +445,22 @@ def voice_assistant_interface(engine):
                     Task: Map the patient's colloquial symptoms to the exact string variables from the dataset.
                     Return ONLY a comma-separated list of the exact string dataset symptoms that correctly match.
                     Do not include any conversational text, explanations, code blocks, bullet points, or symptoms not in the list.
-                    If nothing clearly matches, return an empty response.
+                    If nothing clearly matches, return the word NONE.
                     """
-                    response = model.generate_content(prompt)
+                    response = model.generate_content(prompt, safety_settings=safety_settings)
+                    
+                    # Safely extract text from response
+                    response_text = ""
+                    try:
+                        if response.candidates and response.candidates[0].content.parts:
+                            response_text = response.candidates[0].content.parts[0].text.strip()
+                    except (AttributeError, IndexError):
+                        response_text = ""
                     
                     matched = []
-                    if response.text and response.text.strip():
+                    if response_text and response_text != "NONE":
                         # Parse the comma-separated list
-                        extracted = [s.strip() for s in response.text.split(',')]
+                        extracted = [s.strip() for s in response_text.split(',')]
                         for s in extracted:
                             # Verify the exact system matched correctly
                             if s in symptom_set and s not in matched:
