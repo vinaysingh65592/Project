@@ -477,10 +477,7 @@ def voice_assistant_interface(engine):
                         if new_found:
                             st.rerun()
                     else:
-                        if response_text:
-                            st.warning(f"⚠️ Gemini AI responded but no valid symptoms matched. AI returned: `{response_text[:200]}`")
-                        else:
-                            st.warning("⚠️ Gemini AI returned an empty response. Try describing your symptoms more clearly.")
+                        st.warning("🎙️ **Could not detect valid symptoms from your voice input.** Please speak clearly, describe your symptoms in detail (e.g., 'I have a headache and fever'), and try again.")
                 except Exception as e:
                     st.error(f"Gemini API Processing Error: {e}")
     except Exception as e:
