@@ -425,7 +425,7 @@ def voice_assistant_interface(engine):
                 try:
                     all_symptoms = engine.get_all_symptoms()
                     symptom_set = set(all_symptoms)
-                    model = genai.GenerativeModel('gemini-2.5-flash')
+                    model = genai.GenerativeModel("MODLE","")
                     prompt = f"""
                     You are a highly capable medical parsing AI. 
                     The patient reported the following physical issues: "{text}"
