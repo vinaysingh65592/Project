@@ -305,9 +305,6 @@ def display_main_bmi_dashboard():
     with col3:
         gender = st.selectbox("Gender", ["Male", "Female", "Other"])
         
-    with col3:
-        gender = st.selectbox("Gender", ["Male", "Female", "Other"])
-        
     if st.button("Calculate BMI & Generate Plan", type="primary"):
         bmi = weight / ((height/100)**2)
         if bmi < 18.5:
