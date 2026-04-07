@@ -468,7 +468,7 @@ def voice_assistant_interface(engine):
                 
                     if matched:
                         new_found = False
-                        st.info(f"Gemini AI extracted: {', '.join([s.replace('_', ' ') for s in matched])}")
+                        st.success(f"✅ **{len(matched)} symptom(s) extracted by Gemini AI:** {', '.join([s.replace('_', ' ').title() for s in matched])}")
                         for s in matched:
                             if s not in st.session_state.selected_symptoms:
                                 st.session_state.selected_symptoms[s] = True
@@ -477,7 +477,10 @@ def voice_assistant_interface(engine):
                         if new_found:
                             st.rerun()
                     else:
-                        st.warning("No valid matching symptoms were detected by the AI from your phrase.")
+                        if response_text:
+                            st.warning(f"⚠️ Gemini AI responded but no valid symptoms matched. AI returned: `{response_text[:200]}`")
+                        else:
+                            st.warning("⚠️ Gemini AI returned an empty response. Try describing your symptoms more clearly.")
                 except Exception as e:
                     st.error(f"Gemini API Processing Error: {e}")
     except Exception as e:
