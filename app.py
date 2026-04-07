@@ -410,8 +410,12 @@ def voice_assistant_interface(engine):
         from streamlit_mic_recorder import speech_to_text
         import google.generativeai as genai
         
-        # Configure Gemini API
-        genai.configure(api_key="AIzaSyCgyTRyL7Mst6SYHCPufCvNMGJk4dPYaWU")
+        # Configure Gemini API (key stored in Streamlit Secrets)
+        api_key = st.secrets.get("GEMINI_API_KEY", "")
+        if not api_key:
+            st.error("⚠️ Gemini API key not configured. Add GEMINI_API_KEY in app Settings → Secrets.")
+            return
+        genai.configure(api_key=api_key)
         
         text = speech_to_text(language='en', start_prompt="🔴 Start Voice Recognition", stop_prompt="⏹ Speak Now (Auto-stops on pause)", just_once=False, key='stt')
         if text:
