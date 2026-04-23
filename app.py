@@ -865,7 +865,7 @@ def main():
             </style>
             <div class="loading-container">
                 <div class="loading-ring"></div>
-                <div class="loading-title">⚕️ ALEIHMS</div>
+                <div class="loading-title">⚕️</div>
                 <div class="loading-sub">Initializing AI Health Engine — please wait...</div>
                 <div class="loading-steps">
                     <div class="loading-step"><div class="step-icon">🧠</div> Loading ML Disease Predictor</div>
